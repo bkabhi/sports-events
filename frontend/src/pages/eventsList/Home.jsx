@@ -12,10 +12,6 @@ import EventSearch from '../../components/searchAndFilter/EventSearch';
 import EventSort from '../../components/searchAndFilter/EventSort';
 import SingleEventCard from './SingleEventCard';
 
-const baseUrl = 'http://localhost:4000';
-
-const sportsName = ["Badminton", "Football", "Cricket"];
-
 const SORT_OPTIONS = [
     { value: 'Badminton', label: 'Badminton' },
     { value: 'Football', label: 'Football' },
@@ -68,7 +64,9 @@ const Home = () => {
                 </Box>
             </Stack>
             <Grid container spacing={3} pb={5}>
-                {events.length===0?<h1>Not Found</h1>:
+                {
+                isloading ? <h1>...Loading</h1>:
+                events.length===0 ? <h1>Not Found</h1>:
                 events.map((event) => (
                     <Grid key={event._id} item xs={12} sm={6} md={4}>
                         <Link to={`event/${event._id}`}>
