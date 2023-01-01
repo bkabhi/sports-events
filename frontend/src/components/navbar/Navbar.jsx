@@ -5,14 +5,18 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import ThemeChanger from './DarkTheme';
-import logo from '../assets/sports.png'
-import { NavLink } from 'react-router-dom'
+import ThemeChanger from '../theme/DarkTheme';
+import logo from '../../assets/sports.png'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Avatar, Container, Divider, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { BsFillCalendarPlusFill } from 'react-icons/bs'
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { logoutAPI } from '../../redux/auth/action';
+import { useDispatch, useSelector } from 'react-redux';
 
 const menuId = 'primary-search-account-menu';
 
@@ -20,12 +24,20 @@ export default function Navbar() {
     const [isAuth, setIsAuth] = React.useState(true)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const { accessToken } = useSelector((store) => store.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+        dispatch(logoutAPI());
+    }
 
     const renderMenu = (
         <Menu
@@ -41,10 +53,9 @@ export default function Navbar() {
                     filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                     mt: 1.5,
                     '& .MuiAvatar-root': {
-                        width: 32,
-                        height: 32,
-                        ml: -0.5,
-                        mr: 1,
+                        width: 22,
+                        height: 22,
+                        mr: 2,
                     },
                     '&:before': {
                         content: '""',
@@ -63,26 +74,20 @@ export default function Navbar() {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            <MenuItem>
-                <Avatar /> Profile
+            <MenuItem onClick={() => navigate('/EventsStatus')}>
+            <ListItemIcon>
+                <EventAvailableIcon/>
+                </ListItemIcon>
+                Status
             </MenuItem>
-            <MenuItem>
-                <Avatar /> My account
+            <MenuItem onClick={() => navigate('/CreateEvent')}>
+                <ListItemIcon>
+                    <AddCircleOutlineIcon />
+                </ListItemIcon>
+                Add Events
             </MenuItem>
             <Divider />
-            <MenuItem>
-                <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                </ListItemIcon>
-                Add another account
-            </MenuItem>
-            <MenuItem>
-                <ListItemIcon>
-                    <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-            </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
@@ -109,19 +114,21 @@ export default function Navbar() {
                         </IconButton>
                         <Box sx={{ flexGrow: 1 }} />
                         <Box sx={{ display: 'flex', gap: '2rem' }}>
-                            <IconButton
-                                size="small"
-                                aria-label="show 17 new notifications"
-                                color="inherit"
-                            >
-                                <NavLink to={'/EventsStatus'}>
-                                    <Typography fontSize={'1.1rem'} color='#fff' >
-                                        Status
-                                    </Typography>
-                                </NavLink>
-                            </IconButton>
+                            
                             {
-                                isAuth ?
+                                accessToken ?
+                                <>
+                                    <IconButton
+                                        size="small"
+                                        aria-label="show 17 new notifications"
+                                        color="inherit"
+                                    >
+                                        <NavLink to={'/EventsStatus'}>
+                                            <Typography fontSize={'1.1rem'} color='#fff' >
+                                                Status
+                                            </Typography>
+                                        </NavLink>
+                                    </IconButton>
                                     <IconButton
                                         size="large"
                                         edge="end"
@@ -133,6 +140,7 @@ export default function Navbar() {
                                     >
                                         <AccountCircle />
                                     </IconButton>
+                                    </>
                                     :
                                     <IconButton
                                         size="small"

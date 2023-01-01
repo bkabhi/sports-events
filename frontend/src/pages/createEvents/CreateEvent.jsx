@@ -8,6 +8,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Box } from '@mui/system';
+import { createEventAPI } from '../../redux/event/action';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const ampm = undefined;
 
@@ -16,19 +19,30 @@ export const CreateEvent = () => {
     const [sport_type, setSport_type] = React.useState('');
     const [city, setCity] = React.useState('');
 
+    const { isLoading } = useSelector((store) => store.event);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const handleCreateEvent = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const form = {
+        const formData = {
             title: data.get('event_title'),
-            players_limit: data.get('players_limit'),
+            playersLimit: Number(data.get('players_limit')),
             description: data.get('description'),
             image: data.get('image'),
-            datetime: data.get('datetime'),
+            schedule: data.get('datetime'),
             city: data.get('city'),
-            sport_type: data.get('sport_type'),
+            category: data.get('sport_type'),
         }
-        console.log(form, " Create Event form ");
+        console.log(formData, " Create Event form ");
+        dispatch(createEventAPI(formData))
+            .then((res) => {
+                // navigate('/');
+            })
+            .catch((err) => {
+                console.log(err, " errr ");
+            })
     }
     return (
         <Container component="main" maxWidth="sm" sx={{ mb: 4, mt: 8 }}>
@@ -115,7 +129,7 @@ export const CreateEvent = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={6}>
                             <FormControl variant="standard" sx={{ minWidth: '100%' }}>
                                 <InputLabel id="demo-simple-select-standard-label">Sport Type</InputLabel>

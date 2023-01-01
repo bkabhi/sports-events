@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { Autocomplete, InputAdornment, Popper, TextField, styled } from '@mui/material';
 
 // components
-import Iconify from '../components/iconify/Iconify';
+import Iconify from '../iconify/Iconify';
+import { useState } from 'react';
 
 
 const StyledPopper = styled((props) => <Popper placement="bottom-start" {...props} />)({
@@ -16,11 +17,16 @@ EventSearch.propTypes = {
 };
 
 export default function EventSearch({ events }) {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+const handleChange = (event, value) => setSelectedOptions(value);
+
   return (
     <Autocomplete
       sx={{ width: 280 }}
       autoHighlight
       popupIcon={null}
+      onChange={handleChange}
       PopperComponent={StyledPopper}
       options={events}
       getOptionLabel={(post) => post.title}

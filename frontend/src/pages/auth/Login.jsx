@@ -10,41 +10,42 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Checkbox, FormControlLabel } from '@mui/material';
-// import { getUser } from '../store/auth';
-// import { useDispatch } from 'react-redux'
-
+import { loginAPI } from '../../redux/auth/action';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Login() {
+    const { isLoading, accessToken } = useSelector((store) => store.auth);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const navigate = useNavigate()
-    // const dispatch = useDispatch()
+    React.useEffect(() => {
+        if (accessToken) {
+            navigate("/");
+            return;
+        }
+    }, [accessToken]);
 
-    const handleSubmit = async(event) => {
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const form = {
+        const formData = {
             email: data.get('email'),
             password: data.get('password'),
         }
-        console.log(form , " login form ");
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`,{
-            method: "POST",
-            body: JSON.stringify(form),
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-
-        // const { token, user } = await res.json()
-
-        if(res.ok){
-            // Cookies.set('token',token)
-            // dispatch(getUser(user))
-            navigate('/')
-            // console.log("done", token);
-        }
+        console.log(formData, " login form ");
+        dispatch(loginAPI(formData))
+            .then((res) => { })
+            .catch((err) => {
+            });
+        // if(res.ok){
+        // Cookies.set('token',token)
+        // dispatch(getUser(user))
+        // navigate('/')
+        // console.log("done", token);
+        // }
     };
 
     return (

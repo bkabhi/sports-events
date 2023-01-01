@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Navbar from './components/Navbar';
-import AllRoutes from './components/AllRoutes';
+import Navbar from './components/navbar/Navbar';
 import { Container } from '@mui/system';
-import { Box } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
+import AllRoutes from './routes/All.routes';
 export const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
 export default function App() {
@@ -30,7 +30,8 @@ export default function App() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <Box backgroundColor={theme.palette.background.paper} height="100%">
+        <Box>
+          <CssBaseline/>
           <Navbar/>
           <Container>
             <AllRoutes/>

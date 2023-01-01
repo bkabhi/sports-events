@@ -2,7 +2,11 @@ import styled from '@emotion/styled';
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, CssBaseline, Typography } from '@mui/material'
 import { Container, Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react'
-import SingleEventCard from './SingleEventCard'
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { createBookingAPI, getApprovedPlayerListAPI } from '../../redux/booking/actions';
+import { getEventDetailsAPI } from '../../redux/event/action';
+import SingleEventCard from '../eventsList/SingleEventCard'
 
 const StyledProductImg = styled('img')({
     top: 0,
@@ -13,19 +17,32 @@ const StyledProductImg = styled('img')({
 });
 
 const EventDetails = () => {
-    const [event, setEvent] = useState({})
+    const { eventDetails, isloading } = useSelector((store) => store.event);
+    const { approvedPlayerList } = useSelector((store) => store.booking);
+    const { id } = useParams();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchEvent()
-    }, [])
+        dispatch(getEventDetailsAPI(id));
+    }, []);
 
-    const fetchEvent = async () => {
-        const res = await fetch(`${'https://sports-event-server.onrender.com/api/event'}/`)
-        const res2 = await res.json()
-        console.log(res2.data.events);
-        setEvent(res2.data.events[5])
+    useEffect(() => {
+        eventDetails._id && dispatch(getApprovedPlayerListAPI(eventDetails._id));
+    }, [eventDetails._id]);
+
+    const handleBooking = () => {
+        dispatch(createBookingAPI({ status: "approve", event: eventDetails._id }))
+            .then((res) => { })
+            .catch((error) => { });
+    };
+
+    console.log(eventDetails, " eventDetails ", id);
+
+    let { title, image, category, schedule, playersLimit, description, city='Bangalore' } = eventDetails;
+
+    if(isloading){
+        return <h1>...Loading</h1>
     }
-    let { title, image, timming, colors, playerLimit, description, address } = event;
     return (
         <Container>
             <CssBaseline />
@@ -33,7 +50,7 @@ const EventDetails = () => {
                 <Box width='50%'>
                     <CardHeader
                         title={title}
-                        subheader={address}
+                        subheader={city}
                     />
                     <Card>
                         <CardMedia
@@ -46,26 +63,27 @@ const EventDetails = () => {
                 </Box>
                 <Box width='50%'>
                     <CardContent>
-                        <Typography variant="h4" gutterBottom>
+                        <Typography variant="h3" gutterBottom mb={5} mt={5}>
                             {title}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                            {description}
+                        Description : {description}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                            location:{address}
+                            location : {city}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                            timming: {timming}
+                            Event Time : {schedule}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                            playerLimit:{playerLimit}
+                            Players Limit : {playersLimit}
                         </Typography>
                     </CardContent>
                     <Button
                         type='submit'
                         variant="contained"
                         sx={{ mt: 3, ml: 1 }}
+                        onClick={handleBooking}
                     >
                         Book Now
                     </Button>

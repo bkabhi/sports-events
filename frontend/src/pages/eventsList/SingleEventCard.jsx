@@ -25,11 +25,12 @@ SingleEventCard.propTypes = {
 };
 
 export default function SingleEventCard({ event }) {
-    let { title, image: cover, timming , colors, playerLimit, priceSale } = event;
+    
+    let { title, image: cover, schedule , playersLimit, city, organizer, category } = event;
 
     return (
         <Card>
-            <Box sx={{ pt: '100%', position: 'relative' }}>
+            <Box sx={{ pt: '60%', position: 'relative' }}>
                 <StyledProductImg alt={title} src={cover} />
             </Box>
 
@@ -40,10 +41,10 @@ export default function SingleEventCard({ event }) {
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     {/* <ColorPreview colors={colors} /> */}
                     <Typography variant="subtitle1">
-                        {playerLimit}
+                        {playersLimit}
                     </Typography>
                     <Typography variant="subtitle1">
-                        {timming}
+                        {schedule}
                     </Typography>
                 </Stack>
             </Stack>
