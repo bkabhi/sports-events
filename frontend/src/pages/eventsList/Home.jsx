@@ -18,7 +18,7 @@ const SORT_OPTIONS = [
     { value: 'Cricket', label: 'Cricket' },
 ];
 
-let debounceid = 0;
+let debounceid = 100;
 
 const Home = () => {
     const { events, isloading } = useSelector((store) => store.event);

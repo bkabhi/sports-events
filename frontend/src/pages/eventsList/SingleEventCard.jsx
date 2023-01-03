@@ -33,13 +33,11 @@ export default function SingleEventCard({ event }) {
             <Box sx={{ pt: '60%', position: 'relative' }}>
                 <StyledProductImg alt={title} src={cover} />
             </Box>
-
             <Stack spacing={2} sx={{ p: 3 }}>
                     <Typography variant="subtitle2" noWrap>
                         {title}
                     </Typography>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    {/* <ColorPreview colors={colors} /> */}
                     <Typography variant="subtitle1">
                         {playersLimit}
                     </Typography>
