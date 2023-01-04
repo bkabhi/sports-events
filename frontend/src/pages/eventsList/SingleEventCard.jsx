@@ -1,14 +1,6 @@
 import PropTypes from 'prop-types';
-// @mui
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
+import { Box, Card, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// utils
-// import { fCurrency } from '../../../utils/formatNumber';
-// components
-// import Label from '../../../components/label';
-// import { ColorPreview } from '../../../components/color-utils';
-
-// ----------------------------------------------------------------------
 
 const StyledProductImg = styled('img')({
     top: 0,
@@ -35,14 +27,17 @@ export default function SingleEventCard({ event }) {
             </Box>
             <Stack spacing={2} sx={{ p: 3 }}>
                     <Typography variant="subtitle2" noWrap>
-                        {title}
+                        Title: {title}
+                    </Typography>
+                    <Typography variant="subtitle2" noWrap>
+                        City: {city}
                     </Typography>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Typography variant="subtitle1">
-                        {playersLimit}
+                        Players Limit: {playersLimit}
                     </Typography>
                     <Typography variant="subtitle1">
-                        {schedule}
+                        Event Timing : {schedule}
                     </Typography>
                 </Stack>
             </Stack>

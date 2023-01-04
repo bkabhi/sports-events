@@ -5,11 +5,8 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ThemeChanger from '../../components/theme/DarkTheme';
 import Iconify from '../../components/iconify/Iconify';
 import { getEventsAPI } from '../../redux/event/action';
-import EventSearch from '../../components/searchAndFilter/EventSearch';
-import EventSort from '../../components/searchAndFilter/EventSort';
 import SingleEventCard from './SingleEventCard';
 
 const SORT_OPTIONS = [
