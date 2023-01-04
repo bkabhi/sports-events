@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, CssBaseline, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardContent, CardHeader, CardMedia, CssBaseline, Typography } from '@mui/material'
 import { Container, Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ const StyledProductImg = styled('img')({
 });
 
 const EventDetails = () => {
+    const [error, setError] = React.useState("");
     const { eventDetails, isloading } = useSelector((store) => store.event);
     const { approvedPlayerList } = useSelector((store) => store.booking);
     const { id } = useParams();
@@ -33,7 +34,10 @@ const EventDetails = () => {
     const handleBooking = () => {
         dispatch(createBookingAPI({ status: "approve", event: eventDetails._id }))
             .then((res) => { })
-            .catch((error) => { });
+            .catch((error) => { 
+                console.log(error);
+                setError(error)
+            });
     };
 
     console.log(eventDetails, " eventDetails ", id);
@@ -79,6 +83,10 @@ const EventDetails = () => {
                             Players Limit : {playersLimit}
                         </Typography>
                     </CardContent>
+                    {
+                        error!==""?
+                        <Alert severity="error" onClose={()=>setError("")}>{error}</Alert>:""
+                    }
                     <Button
                         type='submit'
                         variant="contained"

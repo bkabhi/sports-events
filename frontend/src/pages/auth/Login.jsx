@@ -11,22 +11,22 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom'
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Alert, Checkbox, FormControlLabel } from '@mui/material';
 import { loginAPI } from '../../redux/auth/action';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Login() {
-    const { isLoading, accessToken } = useSelector((store) => store.auth);
+    const [checkCredentials, setCheckCredentials] = React.useState("")
+    const { accessToken } = useSelector((store) => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        if (accessToken) {
-            navigate("/");
-            return;
-        }
+        // if (accessToken) {
+        //     navigate("/");
+        //     return;
+        // }
     }, [accessToken]);
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -37,15 +37,12 @@ export default function Login() {
         }
         console.log(formData, " login form ");
         dispatch(loginAPI(formData))
-            .then((res) => { })
+            .then((res) => {
+                navigate("/");
+            })
             .catch((err) => {
+                setCheckCredentials(err)
             });
-        // if(res.ok){
-        // Cookies.set('token',token)
-        // dispatch(getUser(user))
-        // navigate('/')
-        // console.log("done", token);
-        // }
     };
 
     return (
@@ -59,6 +56,10 @@ export default function Login() {
                     alignItems: 'center',
                 }}
             >
+                {
+                    checkCredentials!==""?
+                    <Alert severity="error" onClose={()=>setCheckCredentials("")}>{checkCredentials}</Alert>:""
+                }
                 <Avatar sx={{ m: 1, bgcolor: '#1976d2' }}>
                     <LockOutlinedIcon />
                 </Avatar>

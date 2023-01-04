@@ -16,14 +16,8 @@ const getRefreshToken = (tokenData) => {
 const getAccessToken = (refreshToken) => {
   try {
     let tokenData = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY);
-    let accessToken = jwt.sign(
-      {
-        firstName: tokenData.firstName,
-        lastName: tokenData.lastName,
-        email: tokenData.email,
-        userid: tokenData.userid,
-      },
-      process.env.ACCESS_TOKEN_SECRET_KEY,
+    delete tokenData.exp;
+    let accessToken = jwt.sign(tokenData , process.env.ACCESS_TOKEN_SECRET_KEY,
       { expiresIn: process.env.ACCESS_TOKEN_EXPIRY_TIME }
     );
     return accessToken;

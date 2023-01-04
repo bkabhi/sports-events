@@ -13,9 +13,11 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { signupAPI } from '../../redux/auth/action';
+import { Alert } from '@mui/material';
 
 export default function Register() {
-    const { isLoading, accessToken } = useSelector((store) => store.auth);
+    const [error, setError] = React.useState("");
+    const { accessToken } = useSelector((store) => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -32,17 +34,18 @@ export default function Register() {
             email: data.get('email'),
             password: data.get('password'),
         }
-        console.log(formData, " register form ");
+        if(formData.password.length<6){
+            setError("Passwords Must Be at least 6 characters");
+            return;
+        }
+
         dispatch(signupAPI(formData))
             .then((res) => {
                 navigate("/login");
             })
             .catch((error) => {
+                setError(error)
             });
-        // if(res.ok){
-        //     navigate('/login')
-        //     console.log("success");
-        // }
     };
 
     return (
@@ -56,6 +59,10 @@ export default function Register() {
                     alignItems: 'center',
                 }}
             >
+                {
+                    error!==""?
+                    <Alert severity="error" onClose={()=>setError("")}>{error}</Alert>:""
+                }
                 <Avatar sx={{ m: 1, bgcolor: '#1976d2' }}>
                     <LockOutlinedIcon />
                 </Avatar>

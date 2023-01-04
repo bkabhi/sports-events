@@ -32,9 +32,9 @@ const getApprovedBookingUsers = async ({ requester, eventid }) => {
 const createBooking = async ({ requester, event }) => {
   try {
     let checkBook = await getBookings({ requester, event });
-    // if (checkBook.length) {
-    //   throw new Error("Already Requested: Current Status " + checkBook[0].status);
-    // } else {
+    if (checkBook.length) {
+      throw new Error("Already Requested: Current Status " + checkBook[0].status);
+    } else {
       let eventLimit = await eventModel.findById(event, { player_limits: 1, _id: 0 });
       let totalApprovedBookings = await bookingModel.find({ event, status: "Approved" }).count();
 
@@ -43,7 +43,7 @@ const createBooking = async ({ requester, event }) => {
       } else {
         return await bookingModel.create({ requester, event });
       }
-    // }
+    }
   } catch (error) {
     throw new Error(error);
   }

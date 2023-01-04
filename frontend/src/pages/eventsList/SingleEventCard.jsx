@@ -24,22 +24,26 @@ export default function SingleEventCard({ event }) {
         <Card>
             <Box sx={{ pt: '60%', position: 'relative' }}>
                 <StyledProductImg alt={title} src={cover} />
+                <Typography variant="subtitle2" position={'absolute'} fontWeight='800' fontSize={12} color='white'
+                    zIndex='10' top={0} borderRadius='4px 0px' backgroundColor='#1776d2' p='5px' >
+                    Sports : {category}
+                </Typography>
             </Box>
-            <Stack spacing={2} sx={{ p: 3 }}>
-                    <Typography variant="subtitle2" noWrap>
-                        Title: {title}
+            <Stack spacing={2} sx={{ p: 3 }} >
+                    <Typography variant="subtitle2" fontWeight={'600'} noWrap>
+                        {title}
                     </Typography>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Typography variant="subtitle2" noWrap>
                         City: {city}
                     </Typography>
-                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle2" noWrap>
                         Players Limit: {playersLimit}
                     </Typography>
-                    <Typography variant="subtitle1">
+                </Stack>
+                    <Typography variant="subtitle2" noWrap>
                         Event Timing : {schedule}
                     </Typography>
-                </Stack>
             </Stack>
         </Card>
     );

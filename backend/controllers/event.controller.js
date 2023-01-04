@@ -1,33 +1,48 @@
 const { eventModel } = require("../models");
+const { getBookings } = require("./booking.controller");
 
-const createEvent = async (eventData) => {
+// to create new Event
+const createEvent = async (req, res) => {
+  console.log(res.body, " body data");
+  let { title, description, image = "", category, schedule, playersLimit, userid, city } = req.body;
+
+  if (!title || !playersLimit || !schedule)
+    return res.status(400).send({ message: "Required Data missing" });
   try {
-    return await eventModel.create(eventData);
+    let event = { title, description, image, category, schedule, playersLimit, city, organizer: userid };
+
+    let newEvent = await eventModel.create(event);
+    return res.send({ message: "New Event Created", data: newEvent });
   } catch (error) {
-    throw new Error(error);
+    return res.status(400).send({ message: error.message });
   }
-};
+}
 
-const getAllEvents = async (query, others) => {
+//get all events
+const getAllEvents = async(req, res) => {
+  const { q = "", ...others } = req.query;
   try {
-    return await eventModel.aggregate([
-      { $match: { $and: [{ title: { $regex: query, $options: "i" } }, { ...others }] } },
+    let events = await eventModel.aggregate([
+      { $match: { $and: [{ title: { $regex: q, $options: "i" } }, { ...others }] } },
       { $unset: ["updatedAt", "createdAt", "__v"] },
     ]);
+    return res.send({ message: events.length ? "Events found" : "No events found", data: events });
   } catch (error) {
-    throw new Error(error);
+    return res.status(400).send({ message: error.message });
   }
-};
+}
 
 //get event by id
-const getEventDetails = async (eventId) => {
+const getEventDetails =  async (req, res) => {
+  const { id } = req.params;
   try {
-    return await eventModel
-      .findById(eventId)
-      // .populate("organizer", ["firstName", "lastName", "email"]);
+    let event = await eventModel.findById(id).populate("organizer", ["firstName", "lastName", "email"]);
+    
+    let bookedCount = await getBookings({ event: id, status: "Approved" });
+    return res.send({ message: "Events found", data: { ...event?.toObject(), bookedCount: bookedCount.length } });
   } catch (error) {
-    throw new Error(error);
+    return res.status(400).send({ message: error.message });
   }
-};
+}
 
 module.exports = { createEvent, getAllEvents, getEventDetails };

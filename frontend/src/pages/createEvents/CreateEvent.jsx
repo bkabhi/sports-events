@@ -13,9 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const ampm = undefined;
+let date = new Date().toJSON();
 
 export const CreateEvent = () => {
-    const [value, setValue] = React.useState(dayjs('2023-01-01'));
+    const [value, setValue] = React.useState(dayjs(date));
     const [sport_type, setSport_type] = React.useState('');
     const [city, setCity] = React.useState('');
 
@@ -35,7 +36,6 @@ export const CreateEvent = () => {
             city: data.get('city'),
             category: data.get('sport_type'),
         }
-        console.log(formData, " Create Event form ");
         dispatch(createEventAPI(formData))
             .then((res) => {
                 // navigate('/');
