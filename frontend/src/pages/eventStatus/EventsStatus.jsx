@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import SingleEventCard from '../eventsList/SingleEventCard';
 import PendingForApprove from './PendingForApprove';
+import ApprovedEventCard from './ApprovedEventCard';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -91,21 +92,19 @@ export default function FullWidthTabs() {
                     onChangeIndex={handleChangeIndex}
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
-                        
+
                         <Grid container spacing={3} pb={5}>
                             {
                                 bookings.filter((booking) => booking.status === "Approved").map((event) => (
                                     <Grid key={event._id} item xs={12} sm={6} md={4}>
-                                        <Link to={`/event/${event.event._id}`}>
-                                            <SingleEventCard event={event.event} />
-                                        </Link>
+                                        <ApprovedEventCard event={event.event} />
                                     </Grid>
                                 ))
                             }
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction}>
-                        
+
                         <Grid container spacing={3} pb={5}>
                             {
                                 bookings.filter((booking) => booking.status === "Pending").map((event) => (
@@ -119,7 +118,7 @@ export default function FullWidthTabs() {
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={2} dir={theme.direction}>
-                        
+
                         <Grid container spacing={3} pb={5}>
                             {
                                 bookings.filter((booking) => booking.status === "Rejected").map((event) => (

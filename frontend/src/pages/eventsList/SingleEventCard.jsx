@@ -21,7 +21,7 @@ export default function SingleEventCard({ event }) {
     let { title, image: cover, schedule , playersLimit, city, organizer, category } = event;
 
     return (
-        <Card>
+        <Card sx={{ boxShadow: 3 }} className='singleCardList'>
             <Box sx={{ pt: '60%', position: 'relative' }}>
                 <StyledProductImg alt={title} src={cover} />
                 <Typography variant="subtitle2" position={'absolute'} fontWeight='800' fontSize={12} color='white'

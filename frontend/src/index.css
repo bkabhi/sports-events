@@ -9,3 +9,11 @@ body {
 a{
   text-decoration: none;
 }
+
+.singleCardList {
+  transition: transform .5s, box-shadow 1s;
+}
+
+.singleCardList:hover {
+  transform: scale(1.02) perspective(0px);
+}

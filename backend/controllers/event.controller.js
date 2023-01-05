@@ -3,7 +3,6 @@ const { getBookings } = require("./booking.controller");
 
 // to create new Event
 const createEvent = async (req, res) => {
-  console.log(res.body, " body data");
   let { title, description, image = "", category, schedule, playersLimit, userid, city } = req.body;
 
   if (!title || !playersLimit || !schedule)
@@ -24,7 +23,7 @@ const getAllEvents = async(req, res) => {
   try {
     let events = await eventModel.aggregate([
       { $match: { $and: [{ title: { $regex: q, $options: "i" } }, { ...others }] } },
-      { $unset: ["updatedAt", "createdAt", "__v"] },
+      { $unset: ["updatedAt", "createdAt"] },
     ]);
     return res.send({ message: events.length ? "Events found" : "No events found", data: events });
   } catch (error) {
@@ -38,8 +37,8 @@ const getEventDetails =  async (req, res) => {
   try {
     let event = await eventModel.findById(id).populate("organizer", ["firstName", "lastName", "email"]);
     
-    let bookedCount = await getBookings({ event: id, status: "Approved" });
-    return res.send({ message: "Events found", data: { ...event?.toObject(), bookedCount: bookedCount.length } });
+    let bookedApproved = await getBookings({ event: id, status: "Approved" });
+    return res.send({ message: "Events found", data: { ...event?.toObject(), bookedApproved } });
   } catch (error) {
     return res.status(400).send({ message: error.message });
   }

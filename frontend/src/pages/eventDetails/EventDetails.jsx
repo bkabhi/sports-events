@@ -33,7 +33,9 @@ const EventDetails = () => {
 
     const handleBooking = () => {
         dispatch(createBookingAPI({ status: "approve", event: eventDetails._id }))
-            .then((res) => { })
+            .then((res) => {
+
+            })
             .catch((error) => { 
                 console.log(error);
                 setError(error)
@@ -42,7 +44,15 @@ const EventDetails = () => {
 
     console.log(eventDetails, " eventDetails ", id);
 
-    let { title, image, category, schedule, playersLimit, description, city='Bangalore' } = eventDetails;
+    let { title, image, category, schedule, playersLimit, description, city='Bangalore', bookedApproved } = eventDetails;
+
+    const handleBookingStatus = ()=>{
+        if(bookedApproved.length>=playersLimit){
+            setError("Players Limit is Full");
+        }else{
+            handleBooking();
+        }
+    }
 
     if(isloading){
         return <h1>...Loading</h1>
@@ -74,7 +84,7 @@ const EventDetails = () => {
                         Description : {description}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                            location : {city}
+                            location : {category}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
                             Event Time : {schedule}
@@ -91,7 +101,7 @@ const EventDetails = () => {
                         type='submit'
                         variant="contained"
                         sx={{ mt: 3, ml: 1 }}
-                        onClick={handleBooking}
+                        onClick={handleBookingStatus}
                     >
                         Book Now
                     </Button>
